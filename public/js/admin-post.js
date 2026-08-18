@@ -12,6 +12,7 @@ const form = document.getElementById("form-post");
 const mensaje = document.getElementById("mensaje");
 
 let cloudinaryConfig = null;
+const categoriasListasPromise = cargarCategoriasEnSelect();
 
 // Traer la configuración de Cloudinary al cargar la página
 fetch("/api/config/cloudinary")
@@ -108,15 +109,21 @@ async function cargarPostExistente() {
     document.getElementById("extracto").value = post.extracto || "";
     document.getElementById("contenido").value = post.contenido;
     document.getElementById("imagen_portada").value = post.imagen_portada || "";
+
     if (post.imagen_portada) {
       const preview = document.getElementById("preview-imagen");
       preview.src = post.imagen_portada;
       preview.style.display = "block";
     }
+
     document.getElementById("publicado").checked = post.publicado === 1;
     document.getElementById("visibilidad").value =
       post.visibilidad || "publico";
     slugTocadoManualmente = true;
+
+    // Esperar a que las categorías ya estén cargadas en el select antes de seleccionar
+    await categoriasListasPromise;
+    document.getElementById("categoria_id").value = post.categoria_id || "";
   } catch (err) {
     console.error(err);
     mensaje.textContent = "Error al cargar el post";
@@ -168,3 +175,26 @@ form.addEventListener("submit", async (evento) => {
     mensaje.textContent = "No se pudo conectar con el servidor";
   }
 });
+
+async function cargarCategoriasEnSelect() {
+  const select = document.getElementById("categoria_id");
+
+  try {
+    const respuesta = await fetch("/api/categorias");
+    const categorias = await respuesta.json();
+
+    categorias.forEach((cat) => {
+      const opcion = document.createElement("option");
+      opcion.value = cat.id;
+      opcion.textContent = cat.nombre;
+      select.appendChild(opcion);
+    });
+
+    // Si estamos editando, seleccionar la categoría actual del post
+    if (esEdicion) {
+      // Espera a que cargarPostExistente ya haya corrido y sepamos categoria_id del post
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}

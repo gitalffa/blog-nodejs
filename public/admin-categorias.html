@@ -3,43 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin - Mi Blog</title>
+    <title>Admin - Categorías</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/admin.css" />
   </head>
   <body>
     <header class="admin-header">
-      <h1>Panel de administración</h1>
+      <h1>Categorías</h1>
       <div>
         <a href="/" style="margin-right: 1rem">Ver blog</a>
-        <a href="/admin-categorias.html" style="margin-right: 1rem"
-          >Categorías</a
-        >
-        <span id="nombre-usuario"></span>
-        <button id="btn-logout">Cerrar sesión</button>
+        <a href="/admin.html">Volver a la lista de posts</a>
       </div>
     </header>
 
     <main class="admin-main">
-      <a href="/admin-post.html" class="btn-nuevo">+ Nuevo post</a>
-      <table id="tabla-posts">
+      <form id="form-categoria">
+        <label for="nombre">Nueva categoría</label>
+        <input type="text" id="nombre" placeholder="Ej. Viajes" required />
+        <button type="submit">Agregar</button>
+      </form>
+      <p id="mensaje"></p>
+
+      <table id="tabla-categorias" style="margin-top: 1.5rem">
         <thead>
           <tr>
-            <th>Título</th>
-            <th>Estado</th>
-            <th>Visibilidad</th>
-            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Slug</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="cuerpo-tabla">
           <tr>
-            <td colspan="4">Cargando...</td>
+            <td colspan="3">Cargando...</td>
           </tr>
         </tbody>
       </table>
     </main>
 
-    <script src="js/admin.js"></script>
+    <script src="js/admin-categorias.js"></script>
   </body>
 </html>

@@ -27,3 +27,6 @@ app.get("/api/ping", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+const categoriasRoutes = require("./routes/categoriasRoutes");
+app.use("/api/categorias", categoriasRoutes);

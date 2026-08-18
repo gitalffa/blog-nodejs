@@ -25,7 +25,10 @@ async function cargarPosts() {
   <article class="post-card">
     ${post.imagen_portada ? `<img src="${post.imagen_portada}" alt="${post.titulo}">` : ""}
     <h2><a href="/post.html?slug=${post.slug}">${post.visibilidad === "privado" ? "🔒 " : ""}${post.titulo}</a></h2>
-    <p class="post-fecha">${new Date(post.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })}</p>
+    <p class="post-fecha">
+      ${new Date(post.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })}
+      ${post.categoria ? ` · ${post.categoria}` : ""}
+    </p>
     <p>${post.extracto || ""}</p>
   </article>
 `,
