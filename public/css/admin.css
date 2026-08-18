@@ -1,0 +1,142 @@
+.login-box {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.login-box label {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.login-box input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.login-box button {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#mensaje-error {
+  color: #c0392b;
+  margin-top: 1rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1.5rem;
+}
+
+.admin-header button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 0.75rem;
+}
+
+.btn-nuevo {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1rem;
+  background: #1a1a1a;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+#tabla-posts {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tabla-posts th,
+#tabla-posts td {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 1px solid #eee;
+}
+
+.estado-publicado {
+  color: #27ae60;
+  font-weight: 600;
+}
+.estado-borrador {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+#tabla-posts button {
+  padding: 0.3rem 0.7rem;
+  margin-right: 0.4rem;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-main form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 700px;
+}
+
+.admin-main label {
+  font-weight: 600;
+  margin-top: 0.8rem;
+}
+
+.admin-main input,
+.admin-main textarea,
+.admin-main select {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.checkbox-label {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem !important;
+}
+
+.admin-main button[type="submit"] {
+  margin-top: 1.2rem;
+  padding: 0.7rem;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  max-width: 200px;
+}
+
+#mensaje {
+  margin-top: 1rem;
+  font-weight: 600;
+}

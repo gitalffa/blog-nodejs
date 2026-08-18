@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: #222;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 2rem;
+}
+
+.post-card {
+  border-bottom: 1px solid #ddd;
+  padding: 1.5rem 0;
+}
+
+.post-card h2 {
+  margin-bottom: 0.5rem;
+}
+
+.post-card a {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.post-card a:hover {
+  text-decoration: underline;
+}
+
+.post-card img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+article img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.post-fecha {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.post-cuerpo {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+}
+
+.post-cuerpo p {
+  margin-bottom: 1rem;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1.5rem;
+}
+
+.navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.navbar-links a {
+  color: #444;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar-links a:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Blog</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">Mi Blog</a>
+      <div class="navbar-links">
+        <a href="/">Inicio</a>
+        <a href="/admin-login.html" id="link-admin">Admin</a>
+      </div>
+    </nav>
+
+    <main id="lista-posts">
+      <p>Cargando posts...</p>
+    </main>
+
+    <script src="js/home.js"></script>
+    <script>
+      if (localStorage.getItem("token")) {
+        document.getElementById("link-admin").href = "/admin.html";
+      }
+    </script>
+  </body>
+</html>

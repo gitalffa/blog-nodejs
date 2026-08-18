@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Post</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+  <body>
+    <header class="admin-header">
+      <h1 id="titulo-pagina">Nuevo post</h1>
+      <div>
+        <a href="/" style="margin-right: 1rem">Ver blog</a>
+        <a href="/admin.html">Volver a la lista</a>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <form id="form-post">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" required />
+
+        <label for="slug">Slug (URL amigable)</label>
+        <input type="text" id="slug" required />
+
+        <label for="extracto">Extracto (resumen corto)</label>
+        <textarea id="extracto" rows="2"></textarea>
+
+        <label for="imagen_portada_archivo">Imagen de portada</label>
+        <input type="file" id="imagen_portada_archivo" accept="image/*" />
+        <img
+          id="preview-imagen"
+          style="max-width: 200px; margin-top: 0.5rem; display: none"
+        />
+        <p id="mensaje-subida"></p>
+        <input type="hidden" id="imagen_portada" />
+
+        <label for="categoria_id">Categoría</label>
+        <select id="categoria_id">
+          <option value="">Sin categoría</option>
+        </select>
+
+        <label for="contenido">Contenido</label>
+        <textarea id="contenido" rows="12" required></textarea>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="publicado" />
+          Publicar ahora (si no, se guarda como borrador)
+        </label>
+        <label for="visibilidad">Visibilidad</label>
+        <select id="visibilidad">
+          <option value="publico">Público (cualquiera lo puede ver)</option>
+          <option value="privado">Privado (solo yo, iniciando sesión)</option>
+        </select>
+
+        <button type="submit">Guardar</button>
+      </form>
+      <p id="mensaje"></p>
+    </main>
+
+    <script src="js/admin-post.js"></script>
+  </body>
+</html>
