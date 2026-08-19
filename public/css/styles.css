@@ -96,3 +96,32 @@ article img {
   color: #1a1a1a;
   text-decoration: underline;
 }
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+  }
+
+  .post-card img,
+  article img {
+    max-height: 220px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+}

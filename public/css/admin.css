@@ -170,3 +170,33 @@
   min-height: 300px;
   font-size: 1rem;
 }
+
+@media (max-width: 600px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .admin-header div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  #tabla-posts {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .login-box {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+
+  #form-categoria {
+    flex-direction: column !important;
+    align-items: stretch;
+  }
+}
