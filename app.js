@@ -7,6 +7,11 @@ const PORT = process.env.PORT || 3000;
 // Middleware para que Express entienda JSON en el body de las peticiones
 app.use(express.json());
 
+const { renderizarPost } = require("./controllers/metaController");
+app.get("/post.html", renderizarPost);
+
+app.use(express.static("public"));
+
 // Sirve los archivos estáticos del frontend (HTML, CSS, JS del navegador)
 app.use(express.static("public"));
 
