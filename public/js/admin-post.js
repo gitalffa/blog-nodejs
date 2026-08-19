@@ -9,6 +9,12 @@ const postId = parametros.get("id");
 const esEdicion = postId !== null;
 
 const form = document.getElementById("form-post");
+
+const quill = new Quill("#editor-contenido", {
+  theme: "snow",
+  placeholder: "Escribe el contenido de tu publicación...",
+});
+
 const mensaje = document.getElementById("mensaje");
 
 let cloudinaryConfig = null;
@@ -107,7 +113,7 @@ async function cargarPostExistente() {
     document.getElementById("titulo").value = post.titulo;
     document.getElementById("slug").value = post.slug;
     document.getElementById("extracto").value = post.extracto || "";
-    document.getElementById("contenido").value = post.contenido;
+    quill.root.innerHTML = post.contenido;
     document.getElementById("imagen_portada").value = post.imagen_portada || "";
 
     if (post.imagen_portada) {
@@ -137,12 +143,15 @@ if (esEdicion) {
 form.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   mensaje.textContent = "";
-
+  if (quill.getText().trim().length === 0) {
+    mensaje.textContent = "El contenido no puede estar vacío";
+    return;
+  }
   const datosPost = {
     titulo: document.getElementById("titulo").value,
     slug: document.getElementById("slug").value,
     extracto: document.getElementById("extracto").value,
-    contenido: document.getElementById("contenido").value,
+    contenido: quill.root.innerHTML,
     imagen_portada: document.getElementById("imagen_portada").value || null,
     categoria_id: document.getElementById("categoria_id").value || null,
     publicado: document.getElementById("publicado").checked,

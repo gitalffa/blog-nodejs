@@ -6,6 +6,10 @@
     <title>Admin - Post</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/admin.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header class="admin-header">
@@ -42,7 +46,7 @@
         </select>
 
         <label for="contenido">Contenido</label>
-        <textarea id="contenido" rows="12" required></textarea>
+        <div id="editor-contenido"></div>
 
         <label class="checkbox-label">
           <input type="checkbox" id="publicado" />
@@ -59,6 +63,7 @@
       <p id="mensaje"></p>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
     <script src="js/admin-post.js"></script>
   </body>
 </html>
