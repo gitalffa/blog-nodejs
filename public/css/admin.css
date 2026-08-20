@@ -161,16 +161,6 @@
   cursor: pointer;
 }
 
-#editor-contenido {
-  background: white;
-  min-height: 300px;
-}
-
-.ql-editor {
-  min-height: 300px;
-  font-size: 1rem;
-}
-
 @media (max-width: 600px) {
   .admin-header {
     flex-direction: column;

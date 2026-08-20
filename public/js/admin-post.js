@@ -10,11 +10,24 @@ const esEdicion = postId !== null;
 
 const form = document.getElementById("form-post");
 
-const quill = new Quill("#editor-contenido", {
-  theme: "snow",
-  placeholder: "Escribe el contenido de tu publicación...",
-});
+let editorTinyMCE = null;
 
+const editorListoPromise = tinymce
+  .init({
+    selector: "#editor-contenido",
+    height: 400,
+    menubar: false,
+    plugins: "lists link image table code",
+    toolbar:
+      "undo redo | blocks | bold italic underline | " +
+      "alignleft aligncenter alignright alignjustify | " +
+      "bullist numlist | blockquote link image table | code",
+    content_style:
+      "body { font-family: system-ui, sans-serif; font-size: 1rem; }",
+  })
+  .then((editores) => {
+    editorTinyMCE = editores[0];
+  });
 const mensaje = document.getElementById("mensaje");
 
 let cloudinaryConfig = null;
@@ -113,7 +126,8 @@ async function cargarPostExistente() {
     document.getElementById("titulo").value = post.titulo;
     document.getElementById("slug").value = post.slug;
     document.getElementById("extracto").value = post.extracto || "";
-    quill.root.innerHTML = post.contenido;
+    await editorListoPromise;
+    editorTinyMCE.setContent(post.contenido || "");
     document.getElementById("imagen_portada").value = post.imagen_portada || "";
 
     if (post.imagen_portada) {
@@ -143,7 +157,7 @@ if (esEdicion) {
 form.addEventListener("submit", async (evento) => {
   evento.preventDefault();
   mensaje.textContent = "";
-  if (quill.getText().trim().length === 0) {
+  if (editorTinyMCE.getContent({ format: "text" }).trim().length === 0) {
     mensaje.textContent = "El contenido no puede estar vacío";
     return;
   }
@@ -151,7 +165,7 @@ form.addEventListener("submit", async (evento) => {
     titulo: document.getElementById("titulo").value,
     slug: document.getElementById("slug").value,
     extracto: document.getElementById("extracto").value,
-    contenido: quill.root.innerHTML,
+    contenido: editorTinyMCE.getContent(),
     imagen_portada: document.getElementById("imagen_portada").value || null,
     categoria_id: document.getElementById("categoria_id").value || null,
     publicado: document.getElementById("publicado").checked,
