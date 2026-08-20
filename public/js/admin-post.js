@@ -10,6 +10,13 @@ const esEdicion = postId !== null;
 
 const form = document.getElementById("form-post");
 
+const extractoInput = document.getElementById("extracto");
+const contadorExtracto = document.getElementById("contador-extracto");
+
+extractoInput.addEventListener("input", () => {
+  contadorExtracto.textContent = `${extractoInput.value.length} / 500`;
+});
+
 let editorTinyMCE = null;
 
 const editorListoPromise = tinymce

@@ -24,8 +24,16 @@
         <label for="slug">Slug (URL amigable)</label>
         <input type="text" id="slug" required />
 
-        <label for="extracto">Extracto (resumen corto)</label>
-        <textarea id="extracto" rows="2"></textarea>
+        <label for="extracto"
+          >Extracto (resumen corto, máximo 500 caracteres)</label
+        >
+        <textarea id="extracto" rows="2" maxlength="500"></textarea>
+        <p
+          id="contador-extracto"
+          style="font-size: 0.85rem; color: #777; margin-top: -0.3rem"
+        >
+          0 / 500
+        </p>
 
         <label for="imagen_portada_archivo">Imagen de portada</label>
         <input type="file" id="imagen_portada_archivo" accept="image/*" />

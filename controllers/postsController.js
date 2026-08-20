@@ -86,6 +86,9 @@ async function crearPost(req, res) {
 
     res.status(201).json({ id: resultado.insertId, mensaje: "Post creado" });
   } catch (err) {
+    if (err.code === "ER_DATA_TOO_LONG") {
+      return res.status(400).json({ error: "El extracto es demasiado largo" });
+    }
     console.error(err);
     res.status(500).json({ error: "Error al crear el post" });
   }
@@ -123,8 +126,11 @@ async function editarPost(req, res) {
 
     res.json({ mensaje: "Post actualizado" });
   } catch (err) {
+    if (err.code === "ER_DATA_TOO_LONG") {
+      return res.status(400).json({ error: "El extracto es demasiado largo" });
+    }
     console.error(err);
-    res.status(500).json({ error: "Error al actualizar el post" });
+    res.status(500).json({ error: "Error al crear el post" });
   }
 }
 
