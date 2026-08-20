@@ -4,7 +4,7 @@ const pool = require("../config/db");
 async function obtenerPosts(req, res) {
   try {
     let query = `
-      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, c.nombre AS categoria
+      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria
       FROM posts p
       LEFT JOIN categorias c ON p.categoria_id = c.id
       WHERE p.publicado = true
@@ -30,7 +30,7 @@ async function obtenerPostPorSlug(req, res) {
     const { slug } = req.params;
 
     let query =
-      "SELECT p.id, p.titulo, p.slug, p.contenido, p.imagen_portada, p.creado_en, p.visibilidad, c.nombre AS categoria FROM posts p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.slug = ? AND p.publicado = true";
+      "SELECT p.id, p.titulo, p.slug, p.contenido, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria FROM posts p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.slug = ? AND p.publicado = true";
 
     if (!req.usuario) {
       query += " AND p.visibilidad = 'publico'";
@@ -170,6 +170,31 @@ async function obtenerPostPorIdAdmin(req, res) {
   }
 }
 
+// Dar like a un post (público, sin autenticación)
+async function darLike(req, res) {
+  try {
+    const { id } = req.params;
+
+    const [resultado] = await pool.query(
+      "UPDATE posts SET likes = likes + 1 WHERE id = ? AND publicado = true",
+      [id],
+    );
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ error: "Post no encontrado" });
+    }
+
+    const [posts] = await pool.query("SELECT likes FROM posts WHERE id = ?", [
+      id,
+    ]);
+
+    res.json({ likes: posts[0].likes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al dar like" });
+  }
+}
+
 module.exports = {
   obtenerPosts,
   obtenerPostPorSlug,
@@ -178,4 +203,5 @@ module.exports = {
   borrarPost,
   obtenerPostsAdmin,
   obtenerPostPorIdAdmin,
+  darLike,
 };

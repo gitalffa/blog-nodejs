@@ -35,13 +35,16 @@ async function cargarPost() {
   <article>
     ${post.imagen_portada ? `<img src="${post.imagen_portada}" alt="${post.titulo}">` : ""}
     <h2>${post.visibilidad === "privado" ? "🔒 " : ""}${post.titulo}</h2>
-        <p class="post-fecha">
-          ${new Date(post.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })}
-          ${post.categoria ? ` · ${post.categoria}` : ""}
-        </p>
-        <div class="post-cuerpo">${post.contenido}</div>
-      </article>
-    `;
+    <p class="post-fecha">
+      ${new Date(post.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })}
+      ${post.categoria ? ` · ${post.categoria}` : ""}
+    </p>
+    <div class="post-cuerpo">${post.contenido}</div>
+    <button id="btn-like" class="btn-like">🤍 <span id="contador-likes">${post.likes}</span></button>
+  </article>
+`;
+
+    configurarBotonLike(post.id);
   } catch (err) {
     console.error(err);
     contenedor.innerHTML = "<p>Ocurrió un error al cargar el post.</p>";
@@ -49,3 +52,40 @@ async function cargarPost() {
 }
 
 cargarPost();
+
+function configurarBotonLike(postId) {
+  const boton = document.getElementById("btn-like");
+  const likesDados = JSON.parse(localStorage.getItem("likesDados") || "[]");
+
+  if (likesDados.includes(postId)) {
+    boton.classList.add("ya-le-diste-like");
+    boton.textContent =
+      "❤️ " + document.getElementById("contador-likes")?.textContent;
+    boton.disabled = true;
+  }
+
+  boton.addEventListener("click", async () => {
+    boton.disabled = true;
+
+    try {
+      const respuesta = await fetch(`/api/posts/${postId}/like`, {
+        method: "POST",
+      });
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        boton.disabled = false;
+        return;
+      }
+
+      boton.innerHTML = `❤️ ${datos.likes}`;
+      boton.classList.add("ya-le-diste-like");
+
+      likesDados.push(postId);
+      localStorage.setItem("likesDados", JSON.stringify(likesDados));
+    } catch (err) {
+      console.error(err);
+      boton.disabled = false;
+    }
+  });
+}

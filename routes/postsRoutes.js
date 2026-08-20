@@ -7,6 +7,7 @@ const {
   obtenerPostPorSlug,
   crearPost,
   editarPost,
+  darLike,
   borrarPost,
   obtenerPostsAdmin,
   obtenerPostPorIdAdmin,
@@ -17,6 +18,7 @@ router.get("/admin/:id", verificarToken, obtenerPostPorIdAdmin);
 router.get("/", verificarTokenOpcional, obtenerPosts);
 router.get("/:slug", verificarTokenOpcional, obtenerPostPorSlug);
 router.post("/", verificarToken, crearPost);
+router.post("/:id/like", darLike);
 router.put("/:id", verificarToken, editarPost);
 router.delete("/:id", verificarToken, borrarPost);
 
