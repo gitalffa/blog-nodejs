@@ -56,6 +56,22 @@ article img {
   font-size: 0.9rem;
 }
 
+.post-cuerpo pre {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+}
+
+.post-cuerpo code {
+  font-family: "Courier New", monospace;
+}
+
 .post-cuerpo ul,
 .post-cuerpo ol {
   padding-left: 1.5rem;
