@@ -56,6 +56,16 @@ article img {
   font-size: 0.9rem;
 }
 
+.post-cuerpo ul,
+.post-cuerpo ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-cuerpo li {
+  margin-bottom: 0.3rem;
+}
+
 .post-cuerpo {
   margin-top: 1.5rem;
   font-size: 1.05rem;
