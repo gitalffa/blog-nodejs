@@ -1,3 +1,26 @@
+function fechaLarga(fecha) {
+  return new Date(fecha).toLocaleDateString("es-MX", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function iconoCandado() {
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>`;
+}
+
+function iconoCorazon() {
+  return `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"></path></svg>`;
+}
+
+function recorteCloudinary(url, ancho, alto) {
+  if (!url || !url.includes("res.cloudinary.com") || !url.includes("/upload/")) {
+    return url;
+  }
+  return url.replace("/upload/", `/upload/c_fill,g_auto,w_${ancho},h_${alto}/`);
+}
+
 async function cargarPost() {
   const contenedor = document.getElementById("post-contenido");
 
@@ -27,20 +50,28 @@ async function cargarPost() {
 
     const post = await respuesta.json();
 
-    document.title = `${post.titulo} - Mi Blog`;
+    document.title = `${post.titulo} - El Blog de Alffa`;
 
-    document.title = `${post.titulo} - Mi Blog`;
+    const portada = post.imagen_portada
+      ? recorteCloudinary(post.imagen_portada, 1600, 700)
+      : null;
 
     contenedor.innerHTML = `
-  <article>
-    ${post.imagen_portada ? `<img src="${post.imagen_portada}" alt="${post.titulo}">` : ""}
-    <h2>${post.visibilidad === "privado" ? "🔒 " : ""}${post.titulo}</h2>
-    <p class="post-fecha">
-      ${new Date(post.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "long", day: "numeric" })}
-      ${post.categoria ? ` · ${post.categoria}` : ""}
-    </p>
+  <div class="post-banner ${portada ? "" : "cover-fallback"}" style="${
+    portada ? `background-image: url('${portada}');` : ""
+  }">
+    <span class="cover-mark cover-mark-lg">A</span>
+  </div>
+  <article class="post-header">
+    ${post.categoria ? `<span class="tag">${post.categoria}</span>` : ""}
+    <h1>${post.visibilidad === "privado" ? iconoCandado() + " " : ""}${post.titulo}</h1>
+    <div class="post-meta">
+      <span>${fechaLarga(post.creado_en)}</span>
+    </div>
+  </article>
+  <article class="post-cuerpo-wrap">
     <div class="post-cuerpo">${post.contenido}</div>
-    <button id="btn-like" class="btn-like">🤍 <span id="contador-likes">${post.likes}</span></button>
+    <button id="btn-like" class="btn-like">${iconoCorazon()} Me gusta · <span id="contador-likes">${post.likes}</span></button>
   </article>
 `;
 
@@ -55,12 +86,11 @@ cargarPost();
 
 function configurarBotonLike(postId) {
   const boton = document.getElementById("btn-like");
+  const contador = document.getElementById("contador-likes");
   const likesDados = JSON.parse(localStorage.getItem("likesDados") || "[]");
 
   if (likesDados.includes(postId)) {
     boton.classList.add("ya-le-diste-like");
-    boton.textContent =
-      "❤️ " + document.getElementById("contador-likes")?.textContent;
     boton.disabled = true;
   }
 
@@ -78,7 +108,7 @@ function configurarBotonLike(postId) {
         return;
       }
 
-      boton.innerHTML = `❤️ ${datos.likes}`;
+      contador.textContent = datos.likes;
       boton.classList.add("ya-le-diste-like");
 
       likesDados.push(postId);

@@ -4,145 +4,450 @@
   padding: 0;
 }
 
+:root {
+  --bg: oklch(0.97 0.012 75);
+  --card: oklch(0.995 0.004 75);
+  --ink: oklch(0.19 0.02 75);
+  --ink-subtle: oklch(0.46 0.02 75);
+  --near-black: oklch(0.15 0.01 75);
+  --accent: #e2542b;
+  --line: oklch(0.85 0.01 75);
+  --code-bg: oklch(0.17 0.01 75);
+  --code-ink: oklch(0.88 0.01 75);
+}
+
 body {
-  font-family: system-ui, sans-serif;
+  font-family: "Source Serif 4", Georgia, serif;
   line-height: 1.6;
-  color: #222;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  color: var(--ink);
+  background: var(--bg);
 }
 
-header {
-  margin-bottom: 2rem;
+a {
+  color: inherit;
 }
 
-.post-card {
-  border-bottom: 1px solid #ddd;
-  padding: 1.5rem 0;
-}
-
-.post-card h2 {
-  margin-bottom: 0.5rem;
-}
-
-.post-card a {
-  color: #1a1a1a;
-  text-decoration: none;
-}
-
-.post-card a:hover {
-  text-decoration: underline;
-}
-
-.post-card img {
-  width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-article img {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.post-fecha {
-  color: #777;
-  font-size: 0.9rem;
-}
-
-.post-cuerpo pre {
-  background-color: #1e1e1e;
-  color: #d4d4d4;
-  padding: 1rem;
-  border-radius: 6px;
-  overflow-x: auto;
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 1rem 0;
-}
-
-.post-cuerpo code {
-  font-family: "Courier New", monospace;
-}
-
-.post-cuerpo ul,
-.post-cuerpo ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.post-cuerpo li {
-  margin-bottom: 0.3rem;
-}
-
-.post-cuerpo {
-  margin-top: 1.5rem;
-  font-size: 1.05rem;
-}
-
-.post-cuerpo p {
-  margin-bottom: 1rem;
-}
+/* ---------- Navbar ---------- */
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5rem 1.5rem;
-  margin-bottom: 1.5rem;
-  background-color: #1a2a3a;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    url("https://res.cloudinary.com/gb4lvqay/image/upload/v1787209723/ChatGPT_Image_19_ago_2026_11_59_13_p.m..png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center 50%;
-  border-radius: 8px;
-  border-bottom: none;
   position: sticky;
   top: 0;
   z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 4rem;
+  background-color: var(--near-black);
 }
 
 .navbar .navbar-brand {
-  font-weight: 700;
-  font-size: 1.4rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
   color: white;
   text-decoration: none;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 2.2rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .navbar-links a {
   color: white;
   text-decoration: none;
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .navbar-links a:hover {
+  opacity: 0.75;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 4.5rem 4rem 2.5rem;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -3rem;
+  right: 2rem;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: var(--accent);
+  opacity: 0.12;
+}
+
+.hero-tag {
+  position: relative;
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+}
+
+.hero h1 {
+  position: relative;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 1rem 0 0.9rem;
+}
+
+.hero p {
+  position: relative;
+  max-width: 540px;
+  font-size: 1.15rem;
+  color: var(--ink-subtle);
+}
+
+/* ---------- Posts: featured + grid ---------- */
+
+.featured {
+  display: flex;
+  gap: 3rem;
+  align-items: stretch;
+  padding: 2.5rem 4rem 1rem;
+  border-top: 3px solid var(--near-black);
+  margin-top: 1rem;
+}
+
+.featured-cover {
+  flex: 1 1 44%;
+  min-width: 280px;
+  height: 320px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--near-black);
+  background-size: cover;
+  background-position: center;
+}
+
+.featured-body {
+  flex: 1 1 56%;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.featured-label {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.featured-body h2 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.1;
+}
+
+.featured-body h2 a {
+  text-decoration: none;
+}
+
+.featured-body h2 a:hover {
   text-decoration: underline;
 }
 
+.featured-excerpt {
+  color: var(--ink-subtle);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ink-subtle);
+}
+
+.meta-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.meta-likes svg {
+  display: block;
+}
+
+.posts-section {
+  padding: 3rem 4rem 1rem;
+}
+
+.posts-section h3 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 1.7rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.75rem;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.4rem;
+  padding-bottom: 2rem;
+}
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.post-cover {
+  width: 100%;
+  height: 200px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--near-black);
+  background-size: cover;
+  background-position: center;
+}
+
+.cover-fallback {
+  background-image: linear-gradient(
+    135deg,
+    oklch(0.22 0.02 250),
+    oklch(0.13 0.01 250)
+  );
+}
+
+.cover-mark {
+  position: absolute;
+  bottom: -12px;
+  left: -4px;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: white;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.cover-mark-lg {
+  font-size: 9rem;
+  bottom: -30px;
+}
+
+.post-card-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tag {
+  display: inline-block;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1.4px solid var(--ink);
+  color: var(--ink);
+}
+
+.tag-private {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.68rem;
+  color: var(--ink-subtle);
+}
+
+.tag-private svg {
+  display: block;
+}
+
+.post-card h4 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.post-card h4 a {
+  text-decoration: none;
+}
+
+.post-card h4 a:hover {
+  text-decoration: underline;
+}
+
+.post-card p {
+  color: var(--ink-subtle);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.post-fecha {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--ink-subtle);
+}
+
+/* ---------- Post detail ---------- */
+
+.post-banner {
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+  background-color: var(--near-black);
+  background-size: cover;
+  background-position: center;
+}
+
+.post-header {
+  max-width: 740px;
+  margin: -100px auto 0;
+  position: relative;
+  background: var(--card);
+  border-radius: 4px;
+  padding: 2.4rem 2.6rem;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.25);
+}
+
+.post-header .tag {
+  background: var(--accent);
+  border: none;
+  color: white;
+  margin-bottom: 0.9rem;
+}
+
+.post-header h1 {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-top: 0.3rem;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1rem;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--ink-subtle);
+}
+
+.post-cuerpo-wrap {
+  max-width: 740px;
+  margin: 2.2rem auto 0;
+  padding: 0 2.6rem 4rem;
+}
+
+.post-cuerpo {
+  font-size: 1.12rem;
+}
+
+.post-cuerpo p {
+  margin-bottom: 1.3rem;
+  line-height: 1.7;
+}
+
+.post-cuerpo pre {
+  background-color: var(--code-bg);
+  color: var(--code-ink);
+  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  border-left: 4px solid var(--accent);
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 1rem 0 1.4rem;
+}
+
+.post-cuerpo pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-cuerpo p code,
+.post-cuerpo li code {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  background: var(--line);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.92em;
+}
+
+.post-cuerpo ul,
+.post-cuerpo ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.3rem;
+}
+
+.post-cuerpo li {
+  margin-bottom: 0.3rem;
+  line-height: 1.6;
+}
+
 .btn-like {
-  margin-top: 1.5rem;
-  padding: 0.6rem 1.2rem;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  background: white;
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.1s;
+  transition: transform 0.12s ease;
+}
+
+.btn-like svg {
+  display: block;
 }
 
 .btn-like:hover:not(:disabled) {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 .btn-like:disabled {
@@ -150,34 +455,78 @@ article img {
 }
 
 .btn-like.ya-le-diste-like {
-  border-color: #e74c3c;
+  filter: brightness(0.9);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin: 2rem 4rem 0;
+  padding: 2rem 0 3rem;
+  border-top: 1px solid var(--line);
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--ink-subtle);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .featured {
+    flex-direction: column;
+    padding: 2rem 2.5rem 0.5rem;
+  }
+
+  .featured-cover,
+  .featured-body {
+    flex: none;
+    min-width: 0;
+  }
+
+  .featured-cover {
+    height: 240px;
+  }
 }
 
 @media (max-width: 600px) {
-  body {
-    padding: 12px;
-  }
-
   .navbar {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 0.9rem;
+    padding: 1.3rem 1.4rem;
   }
 
   .navbar-links {
-    gap: 1rem;
+    gap: 1.2rem;
+    font-size: 0.72rem;
   }
 
-  .post-card img,
-  article img {
-    max-height: 220px;
+  .hero {
+    padding: 2.4rem 1.4rem 1.6rem;
   }
 
-  h1 {
-    font-size: 1.4rem;
+  .featured {
+    padding: 1.6rem 1.4rem 0.5rem;
   }
 
-  h2 {
-    font-size: 1.2rem;
+  .posts-section {
+    padding: 2.2rem 1.4rem 1rem;
+  }
+
+  .site-footer {
+    margin: 1rem 1.4rem 0;
+  }
+
+  .post-banner {
+    height: 220px;
+  }
+
+  .post-header {
+    margin-top: -70px;
+    padding: 1.6rem 1.5rem;
+  }
+
+  .post-cuerpo-wrap {
+    padding: 0 1.5rem 3rem;
   }
 }
