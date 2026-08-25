@@ -28,6 +28,7 @@ Blog personal full-stack construido desde cero con Node.js, Express y MySQL — 
 | Frontend            | HTML, CSS y JavaScript puro (sin frameworks)          |
 | Hosting             | Railway (servidor + base de datos MySQL administrada) |
 | Despliegue          | Automático desde GitHub (push a `main`)               |
+| Tests               | Vitest + jsdom                                        |
 
 ## Estructura del proyecto
 
@@ -57,7 +58,10 @@ blog/
 │   ├── admin-categorias.html
 │   ├── css/
 │   └── js/
+├── tests/
+│   └── admin.test.js           # Tests del panel de administración
 ├── app.js
+├── vitest.config.mjs
 ├── .env                        # Variables de entorno (no versionado)
 └── package.json
 ```
@@ -95,6 +99,14 @@ npm run dev
 ```
 
 El sitio queda disponible en `http://localhost:3000`.
+
+## Tests
+
+El proyecto usa [Vitest](https://vitest.dev/) con `jsdom` para probar la lógica del panel de administración (`public/js/admin.js`): redirección al login sin sesión, carga y renderizado de posts, manejo de sesión expirada y borrado de posts.
+
+```bash
+npm test
+```
 
 ## Despliegue
 
