@@ -84,8 +84,9 @@ a {
   width: 220px;
   height: 220px;
   border-radius: 999px;
-  background: var(--accent);
-  opacity: 0.12;
+  background-image: url("https://res.cloudinary.com/gb4lvqay/image/upload/v1787209723/ChatGPT_Image_19_ago_2026_11_59_13_p.m..png");
+  background-size: cover;
+  background-position: center;
 }
 
 .hero-tag {
