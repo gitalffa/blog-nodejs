@@ -36,12 +36,15 @@ async function renderizarPost(req, res) {
     const url = `https://${req.get("host")}${req.originalUrl}`;
 
     const metaTags = `
-      <meta property="og:title" content="${escaparHtml(post.titulo)}">
-      <meta property="og:description" content="${escaparHtml(post.extracto || "Lee esta publicación en Mi Blog")}">
-      <meta property="og:image" content="${escaparHtml(post.imagen_portada || "")}">
-      <meta property="og:url" content="${escaparHtml(url)}">
-      <meta property="og:type" content="article">
-    `;
+  <meta property="og:title" content="${escaparHtml(post.titulo)}">
+  <meta property="og:description" content="${escaparHtml(post.extracto || "Lee esta publicación en Mi Blog")}">
+  <meta property="og:image" content="${escaparHtml(post.imagen_portada || "")}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:url" content="${escaparHtml(url)}">
+  <meta property="og:type" content="article">
+`;
 
     html = html.replace("</head>", `${metaTags}</head>`);
 
