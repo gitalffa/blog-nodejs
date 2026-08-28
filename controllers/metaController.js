@@ -2,6 +2,16 @@ const pool = require("../config/db");
 const fs = require("fs");
 const path = require("path");
 
+function escaparHtml(texto) {
+  if (!texto) return "";
+  return texto
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\r?\n/g, " ");
+}
+
 async function renderizarPost(req, res) {
   try {
     const { slug } = req.query;
@@ -23,13 +33,13 @@ async function renderizarPost(req, res) {
     }
 
     const post = posts[0];
-    const url = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+    const url = `https://${req.get("host")}${req.originalUrl}`;
 
     const metaTags = `
-      <meta property="og:title" content="${post.titulo}">
-      <meta property="og:description" content="${post.extracto || "Lee esta publicación en Mi Blog"}">
-      <meta property="og:image" content="${post.imagen_portada || ""}">
-      <meta property="og:url" content="${url}">
+      <meta property="og:title" content="${escaparHtml(post.titulo)}">
+      <meta property="og:description" content="${escaparHtml(post.extracto || "Lee esta publicación en Mi Blog")}">
+      <meta property="og:image" content="${escaparHtml(post.imagen_portada || "")}">
+      <meta property="og:url" content="${escaparHtml(url)}">
       <meta property="og:type" content="article">
     `;
 
