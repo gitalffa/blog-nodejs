@@ -4,7 +4,7 @@ const pool = require("../config/db");
 async function obtenerPosts(req, res) {
   try {
     let query = `
-      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria
+      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria, c.slug AS categoria_slug
       FROM posts p
       LEFT JOIN categorias c ON p.categoria_id = c.id
       WHERE p.publicado = true
@@ -29,8 +29,12 @@ async function obtenerPostPorSlug(req, res) {
   try {
     const { slug } = req.params;
 
-    let query =
-      "SELECT p.id, p.titulo, p.slug, p.contenido, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria FROM posts p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.slug = ? AND p.publicado = true";
+    let query = `
+  SELECT p.id, p.titulo, p.slug, p.extracto, p.contenido, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria, c.slug AS categoria_slug
+  FROM posts p
+  LEFT JOIN categorias c ON p.categoria_id = c.id
+  WHERE p.slug = ? AND p.publicado = true
+`;
 
     if (!req.usuario) {
       query += " AND p.visibilidad = 'publico'";

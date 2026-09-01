@@ -61,4 +61,49 @@ async function borrarCategoria(req, res) {
   }
 }
 
-module.exports = { obtenerCategorias, crearCategoria, borrarCategoria };
+// Obtener los posts de una categoría específica, por su slug
+async function obtenerPostsPorCategoria(req, res) {
+  try {
+    const { slug } = req.params;
+
+    // Primero confirma que la categoría existe
+    const [categorias] = await pool.query(
+      "SELECT id, nombre FROM categorias WHERE slug = ?",
+      [slug],
+    );
+
+    if (categorias.length === 0) {
+      return res.status(404).json({ error: "Categoría no encontrada" });
+    }
+
+    const categoria = categorias[0];
+
+    let query = `
+      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad
+      FROM posts p
+      WHERE p.categoria_id = ? AND p.publicado = true
+    `;
+
+    if (!req.usuario) {
+      query += " AND p.visibilidad = 'publico'";
+    }
+
+    query += " ORDER BY p.creado_en DESC";
+
+    const [posts] = await pool.query(query, [categoria.id]);
+
+    res.json({ categoria: categoria.nombre, posts });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ error: "Error al obtener los posts de la categoría" });
+  }
+}
+
+module.exports = {
+  obtenerCategorias,
+  crearCategoria,
+  borrarCategoria,
+  obtenerPostsPorCategoria,
+};

@@ -7,7 +7,11 @@ function fechaLarga(fecha) {
 }
 
 function recorteCloudinary(url, ancho, alto) {
-  if (!url || !url.includes("res.cloudinary.com") || !url.includes("/upload/")) {
+  if (
+    !url ||
+    !url.includes("res.cloudinary.com") ||
+    !url.includes("/upload/")
+  ) {
     return url;
   }
   return url.replace("/upload/", `/upload/c_fill,g_auto,w_${ancho},h_${alto}/`);
@@ -34,7 +38,7 @@ function tarjetaDestacada(post) {
       <span class="cover-mark">A</span>
     </div>
     <div class="featured-body">
-      <span class="featured-label">★ Destacado${post.categoria ? ` · ${post.categoria}` : ""}</span>
+      <span class="featured-label">★ Destacado${post.categoria ? ` · <a href="/categoria.html?slug=${post.categoria_slug}">${post.categoria}</a>` : ""}</span>
       <h2><a href="/post.html?slug=${post.slug}">${post.visibilidad === "privado" ? iconoCandado() + " " : ""}${post.titulo}</a></h2>
       <p class="featured-excerpt">${post.extracto || ""}</p>
       <div class="featured-meta">
@@ -52,7 +56,7 @@ function tarjetaPost(post) {
       <span class="cover-mark">A</span>
     </div>
     <div class="post-card-tags">
-      ${post.categoria ? `<span class="tag">${post.categoria}</span>` : ""}
+      ${post.categoria ? `<span class="tag"><a href="/categoria.html?slug=${post.categoria_slug}">${post.categoria}</a></span>` : ""}
       ${
         post.visibilidad === "privado"
           ? `<span class="tag-private">${iconoCandado()} Privado</span>`

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Categoría - El Blog de Alffa</title>
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">El Blog de Alffa</a>
+      <div class="navbar-links">
+        <a href="/">Inicio</a>
+        <a
+          href="https://gitalffa.github.io/cv-interactivo/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >CV</a
+        >
+        <a href="/admin-login.html" id="link-admin">Admin</a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="posts-section">
+        <h1 id="titulo-categoria">Cargando...</h1>
+        <div id="lista-posts" class="posts-grid">
+          <p>Cargando posts...</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/categoria.js"></script>
+    <script>
+      if (localStorage.getItem("token")) {
+        document.getElementById("link-admin").href = "/admin.html";
+      }
+    </script>
+  </body>
+</html>
