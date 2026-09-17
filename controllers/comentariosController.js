@@ -37,11 +37,9 @@ async function crearComentario(req, res) {
     }
 
     if (contenido.length > 1000) {
-      return res
-        .status(400)
-        .json({
-          error: "El comentario es demasiado largo (máximo 1000 caracteres)",
-        });
+      return res.status(400).json({
+        error: "El comentario es demasiado largo (máximo 1000 caracteres)",
+      });
     }
 
     // Confirma que el post existe y está publicado
@@ -83,4 +81,26 @@ async function borrarComentario(req, res) {
   }
 }
 
-module.exports = { obtenerComentarios, crearComentario, borrarComentario };
+// Listar todos los comentarios de todos los posts (protegido, solo admin)
+async function obtenerTodosLosComentarios(req, res) {
+  try {
+    const [comentarios] = await pool.query(`
+      SELECT c.id, c.autor_nombre, c.contenido, c.creado_en, c.post_id,
+             p.titulo AS post_titulo, p.slug AS post_slug
+      FROM comentarios c
+      JOIN posts p ON c.post_id = p.id
+      ORDER BY c.creado_en DESC
+    `);
+    res.json(comentarios);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener los comentarios" });
+  }
+}
+
+module.exports = {
+  obtenerComentarios,
+  crearComentario,
+  borrarComentario,
+  obtenerTodosLosComentarios,
+};

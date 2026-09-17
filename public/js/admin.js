@@ -84,3 +84,36 @@ async function borrarPost(id) {
 }
 
 cargarPostsAdmin();
+
+async function actualizarContadorComentarios() {
+  const linkComentarios = document.getElementById("link-comentarios");
+  if (!linkComentarios) return;
+
+  try {
+    const respuesta = await fetch("/api/comentarios/admin/todos", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!respuesta.ok) return;
+
+    const comentarios = await respuesta.json();
+    const revisadosEn = localStorage.getItem("comentariosRevisadosEn");
+
+    const nuevos = revisadosEn
+      ? comentarios.filter((c) => new Date(c.creado_en) > new Date(revisadosEn))
+          .length
+      : comentarios.length;
+
+    if (nuevos > 0) {
+      linkComentarios.textContent = `Comentarios (${nuevos})`;
+      linkComentarios.style.fontWeight = "bold";
+      linkComentarios.style.color = "#e74c3c";
+    } else {
+      linkComentarios.textContent = "Comentarios";
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+actualizarContadorComentarios();

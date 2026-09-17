@@ -196,3 +196,19 @@ body {
     align-items: stretch;
   }
 }
+
+.comentario-admin {
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comentario-admin-post {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 0.4rem;
+}
+
+.comentario-admin-post a {
+  color: #1a1a1a;
+  font-weight: 600;
+}
