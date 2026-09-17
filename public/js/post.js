@@ -15,7 +15,11 @@ function iconoCorazon() {
 }
 
 function recorteCloudinary(url, ancho, alto) {
-  if (!url || !url.includes("res.cloudinary.com") || !url.includes("/upload/")) {
+  if (
+    !url ||
+    !url.includes("res.cloudinary.com") ||
+    !url.includes("/upload/")
+  ) {
     return url;
   }
   return url.replace("/upload/", `/upload/c_fill,g_auto,w_${ancho},h_${alto}/`);
@@ -76,6 +80,8 @@ async function cargarPost() {
 `;
 
     configurarBotonLike(post.id);
+    cargarComentarios(post.id);
+    configurarFormularioComentario(post.id);
   } catch (err) {
     console.error(err);
     contenedor.innerHTML = "<p>Ocurrió un error al cargar el post.</p>";
@@ -116,6 +122,94 @@ function configurarBotonLike(postId) {
     } catch (err) {
       console.error(err);
       boton.disabled = false;
+    }
+  });
+}
+function escaparHtml(texto) {
+  const div = document.createElement("div");
+  div.textContent = texto;
+  return div.innerHTML;
+}
+
+async function cargarComentarios(postId) {
+  const contenedor = document.getElementById("lista-comentarios");
+
+  try {
+    const respuesta = await fetch(`/api/comentarios/post/${postId}`);
+    const comentarios = await respuesta.json();
+
+    if (comentarios.length === 0) {
+      contenedor.innerHTML = "<p>Sé el primero en comentar.</p>";
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    contenedor.innerHTML = comentarios
+      .map(
+        (c) => `
+      <div class="comentario">
+        <p class="comentario-autor">${escaparHtml(c.autor_nombre)}
+          <span class="comentario-fecha">${new Date(c.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "short", day: "numeric" })}</span>
+        </p>
+        <p class="comentario-texto">${escaparHtml(c.contenido)}</p>
+        ${token ? `<button class="btn-borrar-comentario" onclick="borrarComentario(${c.id}, ${postId})">Borrar</button>` : ""}
+      </div>
+    `,
+      )
+      .join("");
+  } catch (err) {
+    console.error(err);
+    contenedor.innerHTML = "<p>Error al cargar los comentarios.</p>";
+  }
+}
+
+async function borrarComentario(id, postId) {
+  const token = localStorage.getItem("token");
+  if (!confirm("¿Borrar este comentario?")) return;
+
+  try {
+    await fetch(`/api/comentarios/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    cargarComentarios(postId);
+  } catch (err) {
+    console.error(err);
+    alert("Error al borrar el comentario");
+  }
+}
+
+function configurarFormularioComentario(postId) {
+  const form = document.getElementById("form-comentario");
+  const mensaje = document.getElementById("mensaje-comentario");
+
+  form.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    mensaje.textContent = "";
+
+    const autor_nombre = document.getElementById("autor_nombre").value;
+    const contenido = document.getElementById("contenido_comentario").value;
+
+    try {
+      const respuesta = await fetch(`/api/comentarios/post/${postId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ autor_nombre, contenido }),
+      });
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        mensaje.textContent = datos.error || "Error al enviar el comentario";
+        return;
+      }
+
+      form.reset();
+      cargarComentarios(postId);
+    } catch (err) {
+      console.error(err);
+      mensaje.textContent = "No se pudo conectar con el servidor";
     }
   });
 }

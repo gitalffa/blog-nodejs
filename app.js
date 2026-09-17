@@ -35,3 +35,6 @@ app.listen(PORT, () => {
 
 const categoriasRoutes = require("./routes/categoriasRoutes");
 app.use("/api/categorias", categoriasRoutes);
+
+const comentariosRoutes = require("./routes/comentariosRoutes");
+app.use("/api/comentarios", comentariosRoutes);

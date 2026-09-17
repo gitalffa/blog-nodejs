@@ -27,9 +27,35 @@
       </div>
     </nav>
 
-    <main id="post-contenido">
-      <p>Cargando...</p>
+    <main>
+      <div id="post-contenido">
+        <p>Cargando...</p>
+      </div>
+
+      <section class="comentarios-section">
+        <h3>Comentarios</h3>
+        <div id="lista-comentarios">
+          <p>Cargando comentarios...</p>
+        </div>
+
+        <form id="form-comentario">
+          <label for="autor_nombre">Nombre</label>
+          <input type="text" id="autor_nombre" maxlength="100" required />
+
+          <label for="contenido_comentario">Comentario</label>
+          <textarea
+            id="contenido_comentario"
+            rows="3"
+            maxlength="1000"
+            required
+          ></textarea>
+
+          <button type="submit">Comentar</button>
+        </form>
+        <p id="mensaje-comentario"></p>
+      </section>
     </main>
+
 
     <script src="js/post.js"></script>
     <script>
