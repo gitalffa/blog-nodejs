@@ -6,11 +6,15 @@ const {
   crearComentario,
   borrarComentario,
   obtenerTodosLosComentarios,
+  crearRespuesta,
+  darLikeComentario,
 } = require("../controllers/comentariosController");
 
 router.get("/admin/todos", verificarToken, obtenerTodosLosComentarios);
 router.get("/post/:postId", obtenerComentarios);
 router.post("/post/:postId", crearComentario);
+router.post("/:id/responder", verificarToken, crearRespuesta);
+router.post("/:id/like", darLikeComentario);
 router.delete("/:id", verificarToken, borrarComentario);
 
 module.exports = router;

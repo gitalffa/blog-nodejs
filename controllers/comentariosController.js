@@ -5,7 +5,7 @@ async function obtenerComentarios(req, res) {
   try {
     const { postId } = req.params;
     const [comentarios] = await pool.query(
-      "SELECT id, autor_nombre, contenido, creado_en FROM comentarios WHERE post_id = ? ORDER BY creado_en ASC",
+      "SELECT id, autor_nombre, contenido, creado_en, likes, parent_id, es_admin FROM comentarios WHERE post_id = ? ORDER BY creado_en ASC",
       [postId],
     );
     res.json(comentarios);
@@ -98,9 +98,81 @@ async function obtenerTodosLosComentarios(req, res) {
   }
 }
 
+// Responder a un comentario, como admin (protegido)
+async function crearRespuesta(req, res) {
+  try {
+    const { id } = req.params;
+    const { contenido } = req.body;
+
+    if (!contenido || !contenido.trim()) {
+      return res.status(400).json({ error: "El contenido es requerido" });
+    }
+
+    if (contenido.length > 1000) {
+      return res.status(400).json({
+        error: "El comentario es demasiado largo (máximo 1000 caracteres)",
+      });
+    }
+
+    const [padres] = await pool.query(
+      "SELECT post_id FROM comentarios WHERE id = ?",
+      [id],
+    );
+
+    if (padres.length === 0) {
+      return res.status(404).json({ error: "Comentario no encontrado" });
+    }
+
+    const [resultado] = await pool.query(
+      "INSERT INTO comentarios (post_id, autor_nombre, contenido, parent_id, es_admin) VALUES (?, ?, ?, ?, true)",
+      [padres[0].post_id, "Alffa", contenido.trim(), id],
+    );
+
+    res.status(201).json({
+      id: resultado.insertId,
+      autor_nombre: "Alffa",
+      contenido: contenido.trim(),
+      parent_id: Number(id),
+      es_admin: true,
+      likes: 0,
+      creado_en: new Date(),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al enviar la respuesta" });
+  }
+}
+
+// Dar like a un comentario (público, sin login)
+async function darLikeComentario(req, res) {
+  try {
+    const { id } = req.params;
+
+    const [resultado] = await pool.query(
+      "UPDATE comentarios SET likes = likes + 1 WHERE id = ?",
+      [id],
+    );
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ error: "Comentario no encontrado" });
+    }
+
+    const [comentarios] = await pool.query(
+      "SELECT likes FROM comentarios WHERE id = ?",
+      [id],
+    );
+    res.json({ likes: comentarios[0].likes });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error al dar like" });
+  }
+}
+
 module.exports = {
   obtenerComentarios,
   crearComentario,
   borrarComentario,
   obtenerTodosLosComentarios,
+  crearRespuesta,
+  darLikeComentario,
 };

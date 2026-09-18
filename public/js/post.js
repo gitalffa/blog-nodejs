@@ -1,3 +1,5 @@
+let postIdActual = null;
+
 function fechaLarga(fecha) {
   return new Date(fecha).toLocaleDateString("es-MX", {
     year: "numeric",
@@ -131,7 +133,54 @@ function escaparHtml(texto) {
   return div.innerHTML;
 }
 
+function construirArbolComentarios(comentarios) {
+  const porId = {};
+  comentarios.forEach((c) => {
+    c.hijos = [];
+    porId[c.id] = c;
+  });
+
+  const raiz = [];
+  comentarios.forEach((c) => {
+    if (c.parent_id && porId[c.parent_id]) {
+      porId[c.parent_id].hijos.push(c);
+    } else {
+      raiz.push(c);
+    }
+  });
+
+  return raiz;
+}
+
+function renderizarComentario(c, token) {
+  const likesComentariosDados = JSON.parse(
+    localStorage.getItem("likesComentariosDados") || "[]",
+  );
+  const yaLeDioLike = likesComentariosDados.includes(c.id);
+
+  return `
+    <div class="comentario ${c.es_admin ? "comentario-admin-reply" : ""}">
+      <p class="comentario-autor">
+        ${escaparHtml(c.autor_nombre)}
+        ${c.es_admin ? '<span class="badge-admin">Admin</span>' : ""}
+        <span class="comentario-fecha">${new Date(c.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "short", day: "numeric" })}</span>
+      </p>
+      <p class="comentario-texto">${escaparHtml(c.contenido)}</p>
+      <div class="comentario-acciones">
+        <button class="btn-like-comentario" data-id="${c.id}" ${yaLeDioLike ? "disabled" : ""} onclick="darLikeComentario(${c.id})">
+          ${yaLeDioLike ? "❤️" : "🤍"} <span id="likes-comentario-${c.id}">${c.likes}</span>
+        </button>
+        ${token ? `<button class="btn-responder-comentario" onclick="mostrarFormularioRespuesta(${c.id})">Responder</button>` : ""}
+        ${token ? `<button class="btn-borrar-comentario" onclick="borrarComentario(${c.id}, postIdActual)">Borrar</button>` : ""}
+      </div>
+      <div id="form-respuesta-${c.id}" class="form-respuesta oculto"></div>
+      ${c.hijos.length > 0 ? `<div class="respuestas">${c.hijos.map((hijo) => renderizarComentario(hijo, token)).join("")}</div>` : ""}
+    </div>
+  `;
+}
+
 async function cargarComentarios(postId) {
+  postIdActual = postId;
   const contenedor = document.getElementById("lista-comentarios");
 
   try {
@@ -144,19 +193,9 @@ async function cargarComentarios(postId) {
     }
 
     const token = localStorage.getItem("token");
-
-    contenedor.innerHTML = comentarios
-      .map(
-        (c) => `
-      <div class="comentario">
-        <p class="comentario-autor">${escaparHtml(c.autor_nombre)}
-          <span class="comentario-fecha">${new Date(c.creado_en).toLocaleDateString("es-MX", { year: "numeric", month: "short", day: "numeric" })}</span>
-        </p>
-        <p class="comentario-texto">${escaparHtml(c.contenido)}</p>
-        ${token ? `<button class="btn-borrar-comentario" onclick="borrarComentario(${c.id}, ${postId})">Borrar</button>` : ""}
-      </div>
-    `,
-      )
+    const arbol = construirArbolComentarios(comentarios);
+    contenedor.innerHTML = arbol
+      .map((c) => renderizarComentario(c, token))
       .join("");
   } catch (err) {
     console.error(err);
@@ -212,4 +251,82 @@ function configurarFormularioComentario(postId) {
       mensaje.textContent = "No se pudo conectar con el servidor";
     }
   });
+}
+
+async function darLikeComentario(id) {
+  const likesComentariosDados = JSON.parse(
+    localStorage.getItem("likesComentariosDados") || "[]",
+  );
+
+  if (likesComentariosDados.includes(id)) return;
+
+  try {
+    const respuesta = await fetch(`/api/comentarios/${id}/like`, {
+      method: "POST",
+    });
+    const datos = await respuesta.json();
+
+    if (!respuesta.ok) return;
+
+    const boton = document.querySelector(
+      `.btn-like-comentario[data-id="${id}"]`,
+    );
+    if (boton) {
+      boton.innerHTML = `❤️ <span id="likes-comentario-${id}">${datos.likes}</span>`;
+      boton.disabled = true;
+    }
+
+    likesComentariosDados.push(id);
+    localStorage.setItem(
+      "likesComentariosDados",
+      JSON.stringify(likesComentariosDados),
+    );
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function mostrarFormularioRespuesta(id) {
+  const contenedor = document.getElementById(`form-respuesta-${id}`);
+  if (!contenedor) return;
+
+  if (contenedor.classList.contains("oculto")) {
+    contenedor.classList.remove("oculto");
+    contenedor.innerHTML = `
+      <textarea id="texto-respuesta-${id}" rows="2" maxlength="1000" placeholder="Responder como admin..."></textarea>
+      <button onclick="enviarRespuesta(${id})">Enviar</button>
+    `;
+  } else {
+    contenedor.classList.add("oculto");
+    contenedor.innerHTML = "";
+  }
+}
+
+async function enviarRespuesta(id) {
+  const token = localStorage.getItem("token");
+  const textarea = document.getElementById(`texto-respuesta-${id}`);
+  const contenido = textarea.value.trim();
+
+  if (!contenido) return;
+
+  try {
+    const respuesta = await fetch(`/api/comentarios/${id}/responder`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ contenido }),
+    });
+
+    if (!respuesta.ok) {
+      alert("Error al enviar la respuesta");
+      return;
+    }
+
+    cargarComentarios(postIdActual);
+  } catch (err) {
+    console.error(err);
+    alert("No se pudo conectar con el servidor");
+  }
 }
