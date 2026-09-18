@@ -2,23 +2,32 @@ const pool = require("../config/db");
 
 // Obtener todos los posts publicados
 async function obtenerPosts(req, res) {
+  let query = `
+    SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria, c.slug AS categoria_slug
+    FROM posts p
+    LEFT JOIN categorias c ON p.categoria_id = c.id
+    WHERE p.publicado = true
+  `;
+
+  if (!req.usuario) {
+    query += " AND p.visibilidad = 'publico'";
+  }
+
+  query += " ORDER BY p.creado_en DESC";
+
   try {
-    let query = `
-      SELECT p.id, p.titulo, p.slug, p.extracto, p.imagen_portada, p.creado_en, p.visibilidad, p.likes, c.nombre AS categoria, c.slug AS categoria_slug
-      FROM posts p
-      LEFT JOIN categorias c ON p.categoria_id = c.id
-      WHERE p.publicado = true
-    `;
-
-    if (!req.usuario) {
-      query += " AND p.visibilidad = 'publico'";
-    }
-
-    query += " ORDER BY p.creado_en DESC";
-
     const [posts] = await pool.query(query);
     res.json(posts);
   } catch (err) {
+    if (err.code === "PROTOCOL_CONNECTION_LOST" || err.code === "ECONNRESET") {
+      console.warn("Conexión perdida, reintentando obtenerPosts...");
+      try {
+        const [posts] = await pool.query(query);
+        return res.json(posts);
+      } catch (err2) {
+        console.error("Reintento también falló:", err2);
+      }
+    }
     console.error(err);
     res.status(500).json({ error: "Error al obtener los posts" });
   }
